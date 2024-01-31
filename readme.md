@@ -1145,9 +1145,20 @@ Translating our tea example from above. First of all we have tea types and tea m
 
 ```php
 // Anything that will be cached is flyweight.
-// Types of tea here will be flyweights.
-class KarakTea
+
+// Flyweight interface
+interface Tea
 {
+    public function serve(int $table);
+}
+
+// Types of tea here will be flyweights.
+class KarakTea implements Tea
+{
+    public function serve(int $table)
+    {
+        echo "Serving Karak tea to table# {$table}\n";
+    }
 }
 
 // Acts as a factory and saves the tea
@@ -1155,7 +1166,7 @@ class TeaMaker
 {
     protected $availableTea = [];
 
-    public function make($preference)
+    public function make(string $preference): Tea
     {
         if (empty($this->availableTea[$preference])) {
             $this->availableTea[$preference] = new KarakTea();
@@ -1171,7 +1182,7 @@ Then we have the `TeaShop` which takes orders and serves them
 ```php
 class TeaShop
 {
-    protected $orders;
+    protected $orders = [];
     protected $teaMaker;
 
     public function __construct(TeaMaker $teaMaker)
@@ -1187,7 +1198,7 @@ class TeaShop
     public function serve()
     {
         foreach ($this->orders as $table => $tea) {
-            echo "Serving tea to table# " . $table;
+            $tea->serve($table);
         }
     }
 }
@@ -1805,6 +1816,12 @@ Wikipedia says
 
 Translating our example from above. First of all we have job seekers that need to be notified for a job posting
 ```php
+// Observer interface
+interface Observer
+{
+    public function onJobPosted(JobPost $job);
+}
+
 class JobPost
 {
     protected $title;
