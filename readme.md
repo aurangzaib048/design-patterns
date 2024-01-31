@@ -1805,6 +1805,12 @@ Wikipedia says
 
 Translating our example from above. First of all we have job seekers that need to be notified for a job posting
 ```php
+// Observer interface
+interface Observer
+{
+    public function onJobPosted(JobPost $job);
+}
+
 class JobPost
 {
     protected $title;
