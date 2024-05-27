@@ -89,55 +89,51 @@ Wikipedia says
 **Programmatic Example**
 
 First of all we have a door interface and the implementation
-```php
-interface Door
-{
-    public function getWidth(): float;
-    public function getHeight(): float;
+```Java
+interface Door {
+    float getWidth();
+    float getHeight();
 }
 
-class WoodenDoor implements Door
-{
-    protected $width;
-    protected $height;
+class WoodenDoor implements Door {
+    private float width;
+    private float height;
 
-    public function __construct(float $width, float $height)
-    {
-        $this->width = $width;
-        $this->height = $height;
+    public WoodenDoor(float width, float height) {
+        this.width = width;
+        this.height = height;
     }
 
-    public function getWidth(): float
-    {
-        return $this->width;
+    public float getWidth() {
+        return width;
     }
 
-    public function getHeight(): float
-    {
-        return $this->height;
+    public float getHeight() {
+        return height;
     }
 }
 ```
 Then we have our door factory that makes the door and returns it
-```php
-class DoorFactory
-{
-    public static function makeDoor($width, $height): Door
-    {
-        return new WoodenDoor($width, $height);
+```Java
+class DoorFactory {
+    public static Door makeDoor(float width, float height) {
+        return new WoodenDoor(width, height);
     }
 }
 ```
 And then it can be used as
-```php
-// Make me a door of 100x200
-$door = DoorFactory::makeDoor(100, 200);
+```Java
+public class Main {
+    public static void main(String[] args) {
+        // Make me a door of 100x200
+        Door door = DoorFactory.makeDoor(100, 200);
+        System.out.println("Width: " + door.getWidth());
+        System.out.println("Height: " + door.getHeight());
 
-echo 'Width: ' . $door->getWidth();
-echo 'Height: ' . $door->getHeight();
-
-// Make me a door of 50x100
-$door2 = DoorFactory::makeDoor(50, 100);
+        // Make me a door of 50x100
+        Door door2 = DoorFactory.makeDoor(50, 100);
+    }
+}
 ```
 
 **When to Use?**
@@ -160,72 +156,69 @@ Wikipedia says
 
 Taking our hiring manager example above. First of all we have an interviewer interface and some implementations for it
 
-```php
-interface Interviewer
-{
-    public function askQuestions();
+```Java
+interface Interviewer {
+    void askQuestions();
 }
 
-class Developer implements Interviewer
-{
-    public function askQuestions()
-    {
-        echo 'Asking about design patterns!';
+class Developer implements Interviewer {
+    @Override
+    public void askQuestions() {
+        System.out.println("Asking about design patterns!");
     }
 }
 
-class CommunityExecutive implements Interviewer
-{
-    public function askQuestions()
-    {
-        echo 'Asking about community building';
+class CommunityExecutive implements Interviewer {
+    @Override
+    public void askQuestions() {
+        System.out.println("Asking about community building");
     }
 }
 ```
 
 Now let us create our `HiringManager`
 
-```php
-abstract class HiringManager
-{
+```Java
+abstract class HiringManager {
 
     // Factory method
-    abstract protected function makeInterviewer(): Interviewer;
+    protected abstract Interviewer makeInterviewer();
 
-    public function takeInterview()
-    {
-        $interviewer = $this->makeInterviewer();
-        $interviewer->askQuestions();
+    public void takeInterview() {
+        Interviewer interviewer = makeInterviewer();
+        interviewer.askQuestions();
     }
 }
 
 ```
 Now any child can extend it and provide the required interviewer
-```php
-class DevelopmentManager extends HiringManager
-{
-    protected function makeInterviewer(): Interviewer
-    {
+```Java
+class DevelopmentManager extends HiringManager {
+    @Override
+    protected Interviewer makeInterviewer() {
         return new Developer();
     }
 }
 
-class MarketingManager extends HiringManager
-{
-    protected function makeInterviewer(): Interviewer
-    {
+class MarketingManager extends HiringManager {
+    @Override
+    protected Interviewer makeInterviewer() {
         return new CommunityExecutive();
     }
 }
 ```
 and then it can be used as
 
-```php
-$devManager = new DevelopmentManager();
-$devManager->takeInterview(); // Output: Asking about design patterns
+```Java
+public class Main {
+    public static void main(String[] args) {
+        DevelopmentManager devManager = new DevelopmentManager();
+        devManager.takeInterview(); // Output: Asking about design patterns
 
-$marketingManager = new MarketingManager();
-$marketingManager->takeInterview(); // Output: Asking about community building.
+        MarketingManager marketingManager = new MarketingManager();
+        marketingManager.takeInterview(); // Output: Asking about community building.
+    }
+}
 ```
 
 **When to use?**
@@ -248,107 +241,103 @@ Wikipedia says
 
 Translating the door example above. First of all we have our `Door` interface and some implementation for it
 
-```php
-interface Door
-{
-    public function getDescription();
+```Java
+interface Door {
+    void getDescription();
 }
 
-class WoodenDoor implements Door
-{
-    public function getDescription()
-    {
-        echo 'I am a wooden door';
+class WoodenDoor implements Door {
+    @Override
+    public void getDescription() {
+        System.out.println("I am a wooden door");
     }
 }
 
-class IronDoor implements Door
-{
-    public function getDescription()
-    {
-        echo 'I am an iron door';
+class IronDoor implements Door {
+    @Override
+    public void getDescription() {
+        System.out.println("I am an iron door");
     }
 }
 ```
 Then we have some fitting experts for each door type
 
-```php
-interface DoorFittingExpert
-{
-    public function getDescription();
+```Java
+interface DoorFittingExpert {
+    void getDescription();
 }
 
-class Welder implements DoorFittingExpert
-{
-    public function getDescription()
-    {
-        echo 'I can only fit iron doors';
+class Welder implements DoorFittingExpert {
+    @Override
+    public void getDescription() {
+        System.out.println("I can only fit iron doors");
     }
 }
 
-class Carpenter implements DoorFittingExpert
-{
-    public function getDescription()
-    {
-        echo 'I can only fit wooden doors';
+class Carpenter implements DoorFittingExpert {
+    @Override
+    public void getDescription() {
+        System.out.println("I can only fit wooden doors");
     }
 }
 ```
 
 Now we have our abstract factory that would let us make family of related objects i.e. wooden door factory would create a wooden door and wooden door fitting expert and iron door factory would create an iron door and iron door fitting expert
-```php
-interface DoorFactory
-{
-    public function makeDoor(): Door;
-    public function makeFittingExpert(): DoorFittingExpert;
+```Java
+interface DoorFactory {
+    Door makeDoor();
+    DoorFittingExpert makeFittingExpert();
 }
 
 // Wooden factory to return carpenter and wooden door
-class WoodenDoorFactory implements DoorFactory
-{
-    public function makeDoor(): Door
-    {
+class WoodenDoorFactory implements DoorFactory {
+    @Override
+    public Door makeDoor() {
         return new WoodenDoor();
     }
 
-    public function makeFittingExpert(): DoorFittingExpert
-    {
+    @Override
+    public DoorFittingExpert makeFittingExpert() {
         return new Carpenter();
     }
 }
 
 // Iron door factory to get iron door and the relevant fitting expert
-class IronDoorFactory implements DoorFactory
-{
-    public function makeDoor(): Door
-    {
+class IronDoorFactory implements DoorFactory {
+    @Override
+    public Door makeDoor() {
         return new IronDoor();
     }
 
-    public function makeFittingExpert(): DoorFittingExpert
-    {
+    @Override
+    public DoorFittingExpert makeFittingExpert() {
         return new Welder();
     }
 }
 ```
 And then it can be used as
-```php
-$woodenFactory = new WoodenDoorFactory();
+```Java
+public class Main {
+    public static void main(String[] args) {
+        // Wooden Factory
+        DoorFactory woodenFactory = new WoodenDoorFactory();
 
-$door = $woodenFactory->makeDoor();
-$expert = $woodenFactory->makeFittingExpert();
+        Door door = woodenFactory.makeDoor();
+        DoorFittingExpert expert = woodenFactory.makeFittingExpert();
 
-$door->getDescription();  // Output: I am a wooden door
-$expert->getDescription(); // Output: I can only fit wooden doors
+        door.getDescription();   // Output: I am a wooden door
+        expert.getDescription(); // Output: I can only fit wooden doors
 
-// Same for Iron Factory
-$ironFactory = new IronDoorFactory();
+        // Iron Factory
+        DoorFactory ironFactory = new IronDoorFactory();
 
-$door = $ironFactory->makeDoor();
-$expert = $ironFactory->makeFittingExpert();
+        door = ironFactory.makeDoor();
+        expert = ironFactory.makeFittingExpert();
 
-$door->getDescription();  // Output: I am an iron door
-$expert->getDescription(); // Output: I can only fit iron doors
+        door.getDescription();   // Output: I am an iron door
+        expert.getDescription(); // Output: I can only fit iron doors
+    }
+}
 ```
 
 As you can see the wooden door factory has encapsulated the `carpenter` and the `wooden door` also iron door factory has encapsulated the `iron door` and `welder`. And thus it had helped us make sure that for each of the created door, we do not get a wrong fitting expert.   
@@ -370,9 +359,27 @@ Wikipedia says
 
 Having said that let me add a bit about what telescoping constructor anti-pattern is. At one point or the other we have all seen a constructor like below:
 
-```php
-public function __construct($size, $cheese = true, $pepperoni = true, $tomato = false, $lettuce = true)
-{
+```Java
+public class Pizza {
+    private int size;
+    private boolean cheese;
+    private boolean pepperoni;
+    private boolean tomato;
+    private boolean lettuce;
+
+    // Constructor with default parameter values
+    public Pizza(int size, boolean cheese, boolean pepperoni, boolean tomato, boolean lettuce) {
+        this.size = size;
+        this.cheese = cheese;
+        this.pepperoni = pepperoni;
+        this.tomato = tomato;
+        this.lettuce = lettuce;
+    }
+
+    // Overloaded constructor without optional parameters
+    public Pizza(int size) {
+        this(size, true, true, false, true);
+    }
 }
 ```
 
@@ -382,82 +389,79 @@ As you can see; the number of constructor parameters can quickly get out of hand
 
 The sane alternative is to use the builder pattern. First of all we have our burger that we want to make
 
-```php
-class Burger
-{
-    protected $size;
+```Java
+public class Burger {
+    private int size;
 
-    protected $cheese = false;
-    protected $pepperoni = false;
-    protected $lettuce = false;
-    protected $tomato = false;
+    private boolean cheese = false;
+    private boolean pepperoni = false;
+    private boolean lettuce = false;
+    private boolean tomato = false;
 
-    public function __construct(BurgerBuilder $builder)
-    {
-        $this->size = $builder->size;
-        $this->cheese = $builder->cheese;
-        $this->pepperoni = $builder->pepperoni;
-        $this->lettuce = $builder->lettuce;
-        $this->tomato = $builder->tomato;
+    public Burger(BurgerBuilder builder) {
+        this.size = builder.size;
+        this.cheese = builder.cheese;
+        this.pepperoni = builder.pepperoni;
+        this.lettuce = builder.lettuce;
+        this.tomato = builder.tomato;
     }
+
+    // Getters for fields if needed
 }
 ```
 
 And then we have the builder
 
-```php
-class BurgerBuilder
-{
-    public $size;
+```Java
+public class BurgerBuilder {
+    public int size;
 
-    public $cheese = false;
-    public $pepperoni = false;
-    public $lettuce = false;
-    public $tomato = false;
+    public boolean cheese = false;
+    public boolean pepperoni = false;
+    public boolean lettuce = false;
+    public boolean tomato = false;
 
-    public function __construct(int $size)
-    {
-        $this->size = $size;
+    public BurgerBuilder(int size) {
+        this.size = size;
     }
 
-    public function addPepperoni()
-    {
-        $this->pepperoni = true;
-        return $this;
+    public BurgerBuilder addPepperoni() {
+        this.pepperoni = true;
+        return this;
     }
 
-    public function addLettuce()
-    {
-        $this->lettuce = true;
-        return $this;
+    public BurgerBuilder addLettuce() {
+        this.lettuce = true;
+        return this;
     }
 
-    public function addCheese()
-    {
-        $this->cheese = true;
-        return $this;
+    public BurgerBuilder addCheese() {
+        this.cheese = true;
+        return this;
     }
 
-    public function addTomato()
-    {
-        $this->tomato = true;
-        return $this;
+    public BurgerBuilder addTomato() {
+        this.tomato = true;
+        return this;
     }
 
-    public function build(): Burger
-    {
-        return new Burger($this);
+    public Burger build() {
+        return new Burger(this);
     }
 }
 ```
 And then it can be used as:
 
-```php
-$burger = (new BurgerBuilder(14))
-                    ->addPepperoni()
-                    ->addLettuce()
-                    ->addTomato()
-                    ->build();
+```Java
+public class Main {
+    public static void main(String[] args) {
+        Burger burger = new BurgerBuilder(14)
+                            .addPepperoni()
+                            .addLettuce()
+                            .addTomato()
+                            .build();
+    }
+}
 ```
 
 **When to use?**
@@ -479,52 +483,69 @@ In short, it allows you to create a copy of an existing object and modify it to 
 
 **Programmatic Example**
 
-In PHP, it can be easily done using `clone`
+In JAVA, it can be easily done using `clone`
 
-```php
-class Sheep
-{
-    protected $name;
-    protected $category;
+```Java
+public class Sheep implements Cloneable {
+    private String name;
+    private String category;
 
-    public function __construct(string $name, string $category = 'Mountain Sheep')
-    {
-        $this->name = $name;
-        $this->category = $category;
+    public Sheep(String name, String category) {
+        this.name = name;
+        this.category = category;
     }
 
-    public function setName(string $name)
-    {
-        $this->name = $name;
+    // Overloaded constructor with default category
+    public Sheep(String name) {
+        this(name, "Mountain Sheep");
     }
 
-    public function getName()
-    {
-        return $this->name;
+    // Getters and setters
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public function setCategory(string $category)
-    {
-        $this->category = $category;
+    public String getName() {
+        return this.name;
     }
 
-    public function getCategory()
-    {
-        return $this->category;
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return this.category;
+    }
+
+    // Clone method
+    @Override
+    public Sheep clone() {
+        try {
+            return (Sheep) super.clone();
+        } catch (CloneNotSupportedException e) {
+            // This should never happen
+            throw new InternalError(e);
+        }
     }
 }
+
 ```
 Then it can be cloned like below
-```php
-$original = new Sheep('Jolly');
-echo $original->getName(); // Jolly
-echo $original->getCategory(); // Mountain Sheep
+```Java
+public class Main {
+    public static void main(String[] args) {
+        Sheep original = new Sheep("Jolly");
+        System.out.println(original.getName()); // Jolly
+        System.out.println(original.getCategory()); // Mountain Sheep
 
-// Clone and modify what is required
-$cloned = clone $original;
-$cloned->setName('Dolly');
-echo $cloned->getName(); // Dolly
-echo $cloned->getCategory(); // Mountain sheep
+        // Clone and modify what is required
+        Sheep cloned = original.clone();
+        cloned.setName("Dolly");
+        System.out.println(cloned.getName()); // Dolly
+        System.out.println(cloned.getCategory()); // Mountain Sheep
+    }
+}
+
 ```
 
 Also you could use the magic method `__clone` to modify the cloning behavior.
@@ -549,42 +570,45 @@ Singleton pattern is actually considered an anti-pattern and overuse of it shoul
 **Programmatic Example**
 
 To create a singleton, make the constructor private, disable cloning, disable extension and create a static variable to house the instance
-```php
-final class President
-{
-    private static $instance;
+```Java
+public final class President {
+    private static President instance;
 
-    private function __construct()
-    {
+    // Private constructor to prevent instantiation from outside
+    private President() {
         // Hide the constructor
     }
 
-    public static function getInstance(): President
-    {
-        if (!self::$instance) {
-            self::$instance = new self();
+    // Public static method to get the instance
+    public static President getInstance() {
+        if (instance == null) {
+            instance = new President();
         }
-
-        return self::$instance;
+        return instance;
     }
 
-    private function __clone()
-    {
-        // Disable cloning
+    // Private method to prevent cloning
+    private Object clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
     }
 
-    private function __wakeup()
-    {
-        // Disable unserialize
+    // Private method to prevent deserialization
+    private Object readResolve() {
+        return instance;
     }
 }
+
 ```
 Then in order to use
-```php
-$president1 = President::getInstance();
-$president2 = President::getInstance();
+```Java
+public class Main {
+    public static void main(String[] args) {
+        President president1 = President.getInstance();
+        President president2 = President.getInstance();
 
-var_dump($president1 === $president2); // true
+        System.out.println(president1 == president2); // true
+    }
+}
 ```
 
 Structural Design Patterns
